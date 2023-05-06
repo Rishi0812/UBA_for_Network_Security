@@ -1,0 +1,103 @@
+###[ Ethernet ]### 
+  dst       = 48:e7:da:f5:82:01
+  src       = 36:27:35:ce:ba:d7
+  type      = IPv4
+###[ IP ]### 
+     version   = 4
+     ihl       = 5
+     tos       = 0x88
+     len       = 153
+     id        = 49037
+     flags     = DF
+     frag      = 0
+     ttl       = 1
+     proto     = udp
+     chksum    = 0xc35a
+     src       = 192.168.69.65
+     dst       = 239.255.255.250
+     \options   \
+###[ UDP ]### 
+        sport     = 43167
+        dport     = 1900
+        len       = 133
+        chksum    = 0x2b6b
+###[ Raw ]### 
+           load      = 'M-SEARCH * HTTP/1.1\r\nHOST: 239.255.255.250:1900\r\nMAN: "ssdp:discover"\r\nMX: 1\r\nST: urn:dial-multiscreen-org:service:dial:1\r\n\r\n'
+
+
+
+
+"Bwd Packet Length Std" -
+"Flow Bytes/s" -
+"Total Length of Fwd Packets" -
+"Fwd Packet Length Std" -
+"Flow IAT Std" -
+"Flow IAT Min" -
+"Fwd IAT Total" -
+"Flow Duration" -
+"Bwd Packet Length Max" -
+"Flow IAT Max" -
+"Flow IAT Mean" -
+"Total Length of Bwd Packets" -
+"Fwd Packet Length Min" -
+"Bwd Packet Length Mean" -
+"Flow Packets/s" -
+"Fwd Packet Length Mean" -
+"Total Backward Packets" -
+"Total Fwd Packets" -
+"Fwd Packet Length Max" -
+"Bwd Packet Length Min" -
+
+
+
+Bwd Packet Length Std: The standard deviation of the length of the backward packets in the flow.
+Flow Bytes/s: The average number of bytes per second transferred in the flow.
+Total Length of Fwd Packets: The total length of the forward packets in the flow.
+Fwd Packet Length Std: The standard deviation of the length of the forward packets in the flow.
+Flow IAT Std: The standard deviation of the inter-arrival time of the packets in the flow.
+Flow IAT Min: The minimum inter-arrival time of the packets in the flow.
+Fwd IAT Total: The total inter-arrival time of the forward packets in the flow.
+Flow Duration: The duration of the flow in seconds.
+Bwd Packet Length Max: The maximum length of the backward packets in the flow.
+Flow IAT Max: The maximum inter-arrival time of the packets in the flow.
+Flow IAT Mean: The mean inter-arrival time of the packets in the flow.
+Total Length of Bwd Packets: The total length of the backward packets in the flow.
+Fwd Packet Length Min: The minimum length of the forward packets in the flow.
+Bwd Packet Length Mean: The mean length of the backward packets in the flow.
+Flow Packets/s: The average number of packets per second transferred in the flow.
+Fwd Packet Length Mean: The mean length of the forward packets in the flow.
+Total Backward Packets: The total number of backward packets in the flow.
+Total Fwd Packets: The total number of forward packets in the flow.
+Fwd Packet Length Max: The maximum length of the forward packets in the flow.
+Bwd Packet Length Min: The minimum length of the backward packets in the flow.
+
+
+# Get the data from the packet
+packet = scapy.sniff(count=1)[0]
+
+# Calculate the variables
+bwd_packet_length_std = packet.getlayer(scapy.IP).len - packet.getlayer(scapy.UDP).len
+flow_bytes_per_second = packet.getlayer(scapy.IP).len / packet.time
+total_length_of_fwd_packets = packet.getlayer(scapy.UDP).len
+fwd_packet_length_std = packet.getlayer(scapy.UDP).len - packet.getlayer(scapy.IP).len
+flow_iat_std = packet.time - packet.getlayer(scapy.IP).time
+flow_iat_min = packet.time - packet.getlayer(scapy.IP).time
+fwd_iat_total = packet.time - packet.getlayer(scapy.IP).time
+flow_duration = packet.time - packet.getlayer(scapy.IP).time
+bwd_packet_length_max = packet.getlayer(scapy.IP).len - packet.getlayer(scapy.UDP).len
+flow_iat_max = packet.time - packet.getlayer(scapy.IP).time
+flow_iat_mean = (packet.time - packet.getlayer(scapy.IP).time) / 2
+total_length_of_bwd_packets = 0
+fwd_packet_length_min = packet.getlayer(scapy.UDP).len
+bwd_packet_length_mean = 0
+flow_packets_per_second = 0
+fwd_packet_length_mean = packet.getlayer(scapy.UDP).len
+total_backward_packets = 0
+total_fwd_packets = 1
+fwd_packet_length_max = packet.getlayer(scapy.UDP).len
+bwd_packet_length_min = 0
+
+
+
+
+sudo cicflowmeter -i wlp4s0 -c flows.Csv
