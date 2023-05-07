@@ -100,4 +100,11 @@ bwd_packet_length_min = 0
 
 
 
-sudo cicflowmeter -i wlp4s0 -c flows.Csv
+sudo cicflowmeter -i wlp4s0 -c flows.csv
+cicflowmeter -f nmap_ss_sacn.pcapng -c flows-1.csv
+
+python -u "/home/rishi/Documents/Rishi/AI Projects/UBA_for_Network_Security/inference.py"
+
+
+
+
